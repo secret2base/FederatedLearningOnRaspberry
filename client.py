@@ -205,10 +205,6 @@ try:
 
         # Import the data set
         file_name = './mnist/niid/mnist' + str(cid) + '.pkl'
-        # file_name = './pcap/niid/traffic'+str(cid)+'.pkl'
-        # file_name = './mnist/niid/MNIST'+str(cid%5)+'.pkl'
-        # train_data, test_data = read_data('./cifar/cifar1.pkl', './cifar/cifar_test.pkl')
-        # train_data, test_data = read_data('./fmnist/fmnist1.pkl', './fmnist/FMNIST_test.pkl')
         train_data = read_data(file_name)
         # train_data, test_data = read_data('./usps/usps1.pkl', './usps/usps_test.pkl')
 
