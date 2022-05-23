@@ -201,7 +201,6 @@ def local_test(model,test_dataloader):
     return test_acc/test_total, test_loss/test_total
 
 
-# socket
 sock = socket.socket()
 sock.connect((SERVER_ADDR, SERVER_PORT))
 print('---------------------------------------------------------------------------')
@@ -272,80 +271,82 @@ try:
             start = time.time()
 
             print('last_round:', is_last_round)
-            if is_last_round:
-                Titlelist = []
-                addr = str(sock.getsockname())
-                addr = addr.replace('.', '_')
-                addr = addr.replace('(', '')
-                addr = addr.replace(')', '')
-                addr = addr.replace('\'', '')
-                addr = addr.replace(',', '_')
-                addr = addr.replace(' ', '')
-                print('addr:', addr)
-
-                saveTitle = 'local_train' + 'T' + str(options['num_round']) + 'E' + str(
-                    options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
-                saveTitle1 = 'local_wait' + 'T' + str(options['num_round']) + 'E' + str(
-                    options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
-                saveTitle2 = 'local_send' + 'T' + str(options['num_round']) + 'E' + str(
-                    options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
-                saveTitle3 = 'local_recv' + 'T' + str(options['num_round']) + 'E' + str(
-                    options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
-                saveTitle4 = 'local_recv_process' + 'T' + str(options['num_round']) + 'E' + str(
-                    options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
-                saveTitle5 = 'local_send_process' + 'T' + str(options['num_round']) + 'E' + str(
-                    options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
-                saveTitle6 = 'local_send_wait' + 'T' + str(options['num_round']) + 'E' + str(
-                    options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
-                saveTitle7 = 'local_init_point' + 'T' + str(options['num_round']) + 'E' + str(
-                    options['num_epoch']) + 'B' + str(
-                    options['batch_size']) + 'id' + str(addr)
-                saveTitle8 = 'local_start_point' + 'T' + str(options['num_round']) + 'E' + str(
-                    options['num_epoch']) + 'B' + str(
-                    options['batch_size']) + 'id' + str(addr)
-
-                Titlelist.append(saveTitle + '_time' + '.mat')
-                Titlelist.append(saveTitle1 + '_time' + '.mat')
-                Titlelist.append(saveTitle2 + '_time' + '.mat')
-                Titlelist.append(saveTitle3 + '_time' + '.mat')
-                Titlelist.append(saveTitle4 + '_time' + '.mat')
-                Titlelist.append(saveTitle5 + '_time' + '.mat')
-                Titlelist.append(saveTitle6 + '_time' + '.mat')
-                Titlelist.append(saveTitle7 + '_time' + '.mat')
-                Titlelist.append(saveTitle8 + '_time' + '.mat')
-
-                scipy.io.savemat(saveTitle + '_time' + '.mat', mdict={saveTitle + '_time': local_train_time})
-                scipy.io.savemat(saveTitle2 + '_time' + '.mat', mdict={saveTitle2 + '_time': msg_send_time})
-                scipy.io.savemat(saveTitle1 + '_time' + '.mat', mdict={saveTitle1 + '_time': local_wait_time})
-                scipy.io.savemat(saveTitle3 + '_time' + '.mat', mdict={saveTitle3 + '_time': msg_recv_time})
-                scipy.io.savemat(saveTitle4 + '_time' + '.mat', mdict={saveTitle4 + '_time': msg_recv_process_time})
-                scipy.io.savemat(saveTitle5 + '_time' + '.mat', mdict={saveTitle5 + '_time': msg_send_process_time})
-                scipy.io.savemat(saveTitle6 + '_time' + '.mat', mdict={saveTitle6 + '_time': msg_wait_send_time})
-                scipy.io.savemat(saveTitle7 + '_time' + '.mat', mdict={saveTitle7 + '_time': init_point})
-                scipy.io.savemat(saveTitle8 + '_time' + '.mat', mdict={saveTitle8 + '_time': start_point})
-
-                # Titlelist[0] = Titlelist[0] + '_time.mat'
-
-                for i in range(9):
-                    file_send(sock, Titlelist[i])
-
-                for i in range(9):
-                    os.remove(os.path.join(Titlelist[i]))
-
-                break
+            # 文件传输部分
+            # if is_last_round:
+            #     Titlelist = []
+            #     addr = str(sock.getsockname())
+            #     addr = addr.replace('.', '_')
+            #     addr = addr.replace('(', '')
+            #     addr = addr.replace(')', '')
+            #     addr = addr.replace('\'', '')
+            #     addr = addr.replace(',', '_')
+            #     addr = addr.replace(' ', '')
+            #     print('addr:', addr)
+            #
+            #     saveTitle = 'local_train' + 'T' + str(options['num_round']) + 'E' + str(
+            #         options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
+            #     saveTitle1 = 'local_wait' + 'T' + str(options['num_round']) + 'E' + str(
+            #         options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
+            #     saveTitle2 = 'local_send' + 'T' + str(options['num_round']) + 'E' + str(
+            #         options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
+            #     saveTitle3 = 'local_recv' + 'T' + str(options['num_round']) + 'E' + str(
+            #         options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
+            #     saveTitle4 = 'local_recv_process' + 'T' + str(options['num_round']) + 'E' + str(
+            #         options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
+            #     saveTitle5 = 'local_send_process' + 'T' + str(options['num_round']) + 'E' + str(
+            #         options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
+            #     saveTitle6 = 'local_send_wait' + 'T' + str(options['num_round']) + 'E' + str(
+            #         options['num_epoch']) + 'B' + str(options['batch_size']) + 'id' + str(addr)
+            #     saveTitle7 = 'local_init_point' + 'T' + str(options['num_round']) + 'E' + str(
+            #         options['num_epoch']) + 'B' + str(
+            #         options['batch_size']) + 'id' + str(addr)
+            #     saveTitle8 = 'local_start_point' + 'T' + str(options['num_round']) + 'E' + str(
+            #         options['num_epoch']) + 'B' + str(
+            #         options['batch_size']) + 'id' + str(addr)
+            #
+            #     Titlelist.append(saveTitle + '_time' + '.mat')
+            #     Titlelist.append(saveTitle1 + '_time' + '.mat')
+            #     Titlelist.append(saveTitle2 + '_time' + '.mat')
+            #     Titlelist.append(saveTitle3 + '_time' + '.mat')
+            #     Titlelist.append(saveTitle4 + '_time' + '.mat')
+            #     Titlelist.append(saveTitle5 + '_time' + '.mat')
+            #     Titlelist.append(saveTitle6 + '_time' + '.mat')
+            #     Titlelist.append(saveTitle7 + '_time' + '.mat')
+            #     Titlelist.append(saveTitle8 + '_time' + '.mat')
+            #
+            #     scipy.io.savemat(saveTitle + '_time' + '.mat', mdict={saveTitle + '_time': local_train_time})
+            #     scipy.io.savemat(saveTitle2 + '_time' + '.mat', mdict={saveTitle2 + '_time': msg_send_time})
+            #     scipy.io.savemat(saveTitle1 + '_time' + '.mat', mdict={saveTitle1 + '_time': local_wait_time})
+            #     scipy.io.savemat(saveTitle3 + '_time' + '.mat', mdict={saveTitle3 + '_time': msg_recv_time})
+            #     scipy.io.savemat(saveTitle4 + '_time' + '.mat', mdict={saveTitle4 + '_time': msg_recv_process_time})
+            #     scipy.io.savemat(saveTitle5 + '_time' + '.mat', mdict={saveTitle5 + '_time': msg_send_process_time})
+            #     scipy.io.savemat(saveTitle6 + '_time' + '.mat', mdict={saveTitle6 + '_time': msg_wait_send_time})
+            #     scipy.io.savemat(saveTitle7 + '_time' + '.mat', mdict={saveTitle7 + '_time': init_point})
+            #     scipy.io.savemat(saveTitle8 + '_time' + '.mat', mdict={saveTitle8 + '_time': start_point})
+            #
+            #     # Titlelist[0] = Titlelist[0] + '_time.mat'
+            #
+            #     for i in range(9):
+            #         file_send(sock, Titlelist[i])
+            #
+            #     for i in range(9):
+            #         os.remove(os.path.join(Titlelist[i]))
+            #
+            #     break
 
             model.train()
 
-            for iter in range(num_epoch):
-                for batch_idx, (x,y) in enumerate(train_loader):
-                    if options['model'] == 'logistic':
-                        x = torch.reshape(x, (x.shape[0], 784))
+            for iteration in range(num_epoch):
+                #for batch_idx, (x,y) in enumerate(train_loader):
+                x, y = next(iter(train_loader))
+                if options['model'] == 'logistic':
+                    x = torch.reshape(x, (x.shape[0], 784))
 
-                    optimizer.zero_grad()
-                    pred = model(x)
-                    loss = criterion(pred,y)
-                    loss.backward()
-                    optimizer.step()
+                optimizer.zero_grad()
+                pred = model(x)
+                loss = criterion(pred,y)
+                loss.backward()
+                optimizer.step()
             #     print('Global Round:'+ round_i+'\t'+'Local Epoch:')
 
             end = time.time()
